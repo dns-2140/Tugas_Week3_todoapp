@@ -2,7 +2,7 @@ const readline = require('node:readline');
 const { stdin: input, stdout: output } = require('node:process');
 const rl = readline.createInterface({ input, output });
 
-const todos = [
+let todos = [
   {
     id: 1,
     title: 'Belajar JavaScript',
@@ -75,6 +75,12 @@ const todos = [
   },
 ];
 
+const state = {
+  id: 10,
+};
+
+console.log(`ini state id ${state.id}`);
+
 function completeTask() {
   const unfinishedTasks = todos.filter((e) => e.completed === false);
   if (unfinishedTasks.length === 0) {
@@ -84,47 +90,41 @@ function completeTask() {
   console.log('='.repeat(90));
   console.log('Berikut adalah tabel yang berisikan tugas yang belum selesai:');
   console.table(unfinishedTasks);
-  rl.question(
-    'Tugas mana yang sudah kamu selesaikan? jawab dengan task idnya:  ',
-    (taskId) => {
-      console.log(taskId);
-      const task = todos.find((e) => e.id === Number(taskId));
+  rl.question('Masukkan ID tugas yang ingin diselesaikan:  ', (taskId) => {
+    console.log(taskId);
+    const task = todos.find((e) => e.id === Number(taskId));
 
-      if (!task) {
-        console.log('❌ ID tidak ditemukan. Coba lagi.');
-      } else if (task.completed) {
-        console.log(
-          `⚠️ Tugas "${task.title}" sudah selesai sebelumnya pada ${task.completedAt}.`
-        );
-      } else {
-        task.completed = true;
-        task.completedAt = new Date().toLocaleString();
-        console.log(`✅${task.title} telah selesai`);
-      }
-      showMenu();
+    if (!task) {
+      console.log('❌ ID tidak ditemukan. Coba lagi.');
+    } else if (task.completed) {
+      console.log(
+        `⚠️ Tugas "${task.title}" sudah selesai sebelumnya pada ${task.completedAt}.`
+      );
+    } else {
+      task.completed = true;
+      task.completedAt = new Date().toLocaleString();
+      console.log(`✅ ${task.title} telah selesai`);
     }
-  );
+    showMenu();
+  });
 }
 
 function deleteTask() {
   console.log('='.repeat(90));
   console.log('Berikut adalah tabel semua tugas:');
   console.table(todos);
-  rl.question(
-    'Tugas mana yang kamu ingin hapus? jawab dengan task idnya:  ',
-    (taskId) => {
-      console.log(taskId);
-      const task = todos.find((e) => e.id === Number(taskId));
+  rl.question('Masukkan ID tugas yang ingin dihapus:  ', (taskId) => {
+    console.log(taskId);
+    const task = todos.find((e) => e.id === Number(taskId));
 
-      if (!task) {
-        console.log('❌ ID tidak ditemukan. Coba lagi.');
-      } else {
-        todos = todos.filter((todo) => todo.id !== Number(taskId));
-        console.log(`🗑${task.title} telah dihapus`);
-      }
-      showMenu();
+    if (!task) {
+      console.log('❌ ID tidak ditemukan. Coba lagi.');
+    } else {
+      todos = todos.filter((todo) => todo.id !== Number(taskId));
+      console.log(`🗑 ${task.title} telah dihapus`);
     }
-  );
+    showMenu();
+  });
 }
 
 function showMenu() {
@@ -165,12 +165,13 @@ function addTodo() {
       console.log('tidak boleh kosong');
     } else {
       const taskData = {
-        id: 1,
+        id: state.id + 1,
         title: task,
         completed: false,
         createdAt: new Date().toLocaleString(),
         completedAt: null,
       };
+      state.id++;
       todos.push(taskData);
       console.log('Tugas ditambahakan');
     }
