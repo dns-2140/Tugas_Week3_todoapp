@@ -90,6 +90,20 @@ function showTable() {
   console.table(newTable);
 }
 
+function showUnfinished() {
+  console.log('='.repeat(90));
+  console.log('Berikut adalah tabel yang berisikan tugas yang belum selesai:');
+  const filteredTable = todos.filter((e) => e.completed === false);
+  const newTable = filteredTable.map((todo) => ({
+    ...todo,
+    completed: todo.completed ? '✅' : '❌',
+    completedAt: todo.completedAt ? todo.completedAt : ' ',
+  }));
+
+  console.table(newTable);
+  showMenu();
+}
+
 function completeTask() {
   const unfinishedTasks = todos.filter((e) => e.completed === false);
   if (unfinishedTasks.length === 0) {
@@ -140,6 +154,7 @@ function showMenu() {
   console.log('\n==== To-Do List ====');
   console.log('1. Tambah Tugas');
   console.log('2. Lihat Semua Tugas');
+  console.log('3. Lihat Tugas Yang Belum Selesai');
   console.log('3. Selesaikan Tugas');
   console.log('4. Hapus Tugas');
   console.log('5. Keluar');
@@ -152,12 +167,15 @@ function showMenu() {
         listTodo();
         break;
       case '3':
-        completeTask();
+        showUnfinished();
         break;
       case '4':
-        deleteTask();
+        completeTask();
         break;
       case '5':
+        deleteTask();
+        break;
+      case '6':
         console.log('terima kasih');
         rl.close();
         break;
