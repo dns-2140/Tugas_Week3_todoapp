@@ -81,6 +81,15 @@ const state = {
 
 console.log(`ini state id ${state.id}`);
 
+function showTable() {
+  const newTable = todos.map((todo) => ({
+    ...todo,
+    completed: todo.completed ? '✅' : '❌',
+    completedAt: todo.completedAt ? todo.completedAt : ' ',
+  }));
+  console.table(newTable);
+}
+
 function completeTask() {
   const unfinishedTasks = todos.filter((e) => e.completed === false);
   if (unfinishedTasks.length === 0) {
@@ -187,7 +196,7 @@ function listTodo() {
     // todos.forEach((todo, index) => {
     //   console.log(`${index + 1}. ${todo}`);
     // });
-    console.table(todos);
+    showTable();
   }
   showMenu();
 }
